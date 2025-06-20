@@ -1,6 +1,6 @@
 import streamlit as st
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, MBartForConditionalGeneration
-import json
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import MBartForConditionalGeneration, MBartTokenizerimport, json
 from khmernltk import word_tokenize
 import torch
 import difflib
