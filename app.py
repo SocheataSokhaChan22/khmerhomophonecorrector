@@ -165,7 +165,7 @@ with col2:
         with st.spinner("Processing..."):
             try:
                 # Load model
-                model_components = load_model(MODEL_CONFIG["path"])
+                model_components = load_model()
                 
                 # Process the text
                 corrected = process_text(user_input, model_components)
