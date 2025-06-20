@@ -1,6 +1,4 @@
-streamlit==1.46.0
-transformers==4.39.3
-torch>=2.5.0,<2.6.0
-khmer-nltk==1.6
-sentencepiece>=0.1.99
-protobuf==3.20.0
+streamlit
+transformers
+torch
+sentencepiece
