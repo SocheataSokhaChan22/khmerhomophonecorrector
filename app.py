@@ -1,5 +1,5 @@
 import streamlit as st
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import MBartForConditionalGeneration, MBartTokenizerimport, json
 from khmernltk import word_tokenize
 import torch
@@ -85,24 +85,14 @@ def find_corrections(original, corrected):
     return corrections
 
 @st.cache_resource
-def load_model(model_path):
+def load_model():
     try:
-        model = MBartForConditionalGeneration.from_pretrained(model_path)
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
-        
-        model.eval()
-        
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        model = model.to(device)
-        
-        return {
-            "model": model,
-            "tokenizer": tokenizer,
-            "device": device
-        }
+        tokenizer = AutoTokenizer.from_pretrained("SocheataSokhachan/khmerhomophonecorrector", use_fast=False)
+        model = AutoModelForSeq2SeqLM.from_pretrained("SochetaSokhachan/khmerhomophonecorrector")
+        return tokenizer, model
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
-        return None
+        return None, None
 
 def process_text(text, model_components):
     if model_components is None:
