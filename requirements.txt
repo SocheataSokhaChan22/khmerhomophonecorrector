@@ -1,4 +1,5 @@
 streamlit==1.46.0
 transformers==4.39.3
-torch==2.2.1
-khmer-nltk==1.6
+torch==2.2.1  
+khmer-nltk==1.6  
+scikit-learn
