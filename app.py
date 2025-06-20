@@ -57,7 +57,7 @@ st.image("header.png", use_container_width=True)
 
 # Model configurations
 MODEL_CONFIG = {
-    "path": "SocheataSokhachan/khmerhomophonecorrector",
+    "path": "socheatasokhachan/khmerhomophonecorrector",
     "description": "Hosted on Hugging Face Hub"
 }
 
