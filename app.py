@@ -88,7 +88,7 @@ def find_corrections(original, corrected):
 def load_model(model_path):
     try:
         model = MBartForConditionalGeneration.from_pretrained(model_path)
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
+        tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
         
         model.eval()
         
