@@ -2,3 +2,4 @@ streamlit==1.46.0
 transformers==4.39.3
 torch==2.7.1
 khmer-nltk==1.6
+sentencepiece
