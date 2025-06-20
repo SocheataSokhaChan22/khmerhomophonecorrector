@@ -1,5 +1,6 @@
 streamlit==1.46.0
 transformers==4.39.3
-torch==2.7.1
+torch==2.2.1
 khmer-nltk==1.6
-sentencepiece
+sentencepiece==0.2.0
+protobuf==3.20.0
