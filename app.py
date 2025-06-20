@@ -1,6 +1,5 @@
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-from transformers import MBartForConditionalGeneration, MBartTokenizer
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, MBartForConditionalGeneration
 import json
 from khmernltk import word_tokenize
 import torch
@@ -54,7 +53,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # Display header image
-st.image("header.png", use_container_width=True)
+st.image("header.png", use_column_width=True)
 
 # Model configurations
 MODEL_CONFIG = {
@@ -86,14 +85,24 @@ def find_corrections(original, corrected):
     return corrections
 
 @st.cache_resource
-def load_model():
+def load_model(model_path):
     try:
-        tokenizer = AutoTokenizer.from_pretrained("SocheataSokhachan/khmerhomophonecorrector", use_fast=False)
-        model = AutoModelForSeq2SeqLM.from_pretrained("SochetaSokhachan/khmerhomophonecorrector")
-        return tokenizer, model
+        model = MBartForConditionalGeneration.from_pretrained(model_path)
+        tokenizer = AutoTokenizer.from_pretrained(model_path)
+        
+        model.eval()
+        
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model = model.to(device)
+        
+        return {
+            "model": model,
+            "tokenizer": tokenizer,
+            "device": device
+        }
     except Exception as e:
         st.error(f"Error loading model: {str(e)}")
-        return None, None
+        return None
 
 def process_text(text, model_components):
     if model_components is None:
@@ -165,7 +174,7 @@ with col2:
         with st.spinner("Processing..."):
             try:
                 # Load model
-                model_components = load_model()
+                model_components = load_model(MODEL_CONFIG["path"])
                 
                 # Process the text
                 corrected = process_text(user_input, model_components)
