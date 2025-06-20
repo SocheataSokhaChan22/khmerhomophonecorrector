@@ -53,7 +53,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # Display header image
-st.image("header.png", use_column_width=True)
+st.image("header.png", use_container_width=True)
 
 # Model configurations
 MODEL_CONFIG = {
