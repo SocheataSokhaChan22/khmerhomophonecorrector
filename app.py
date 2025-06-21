@@ -49,17 +49,61 @@ st.markdown("""
         color: #666;
         margin-top: 0.5rem;
     }
+    .homophone-group {
+        background-color: #f0f8ff;
+        padding: 0.5rem;
+        margin: 0.25rem 0.5rem;
+        border-radius: 0.3rem;
+        border-left: 3px solid #1f77b4;
+        white-space: nowrap;
+        display: inline-block;
+        min-width: 200px;
+    }
+    .homophone-examples {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: auto;
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        background-color: #fafafa;
+        margin: 1rem 0;
+    }
+    .homophone-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        min-width: max-content;
+    }
+    .homophone-section {
+        margin: 2rem 0;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        border: 1px solid #e9ecef;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 # Display header image
-st.image("header.png", use_container_width=True)
+st.image("header.png", use_column_width=True)
 
 # Model configurations
 MODEL_CONFIG = {
-    "path": "socheatasokhachan/khmerhomophonecorrector",
+    "path": "SocheataSokhachan/khmerhomophonecorrector",
     "description": "Hosted on Hugging Face Hub"
 }
+
+@st.cache_data
+def load_homophone_examples():
+    """Load homophone examples from JSON file"""
+    try:
+        with open('homophone_test.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data.get('homophones', [])
+    except Exception as e:
+        st.error(f"Error loading homophone examples: {str(e)}")
+        return []
 
 def word_segment(text):
     return " ".join(word_tokenize(text)).replace("   ", " ▂ ")
@@ -88,7 +132,7 @@ def find_corrections(original, corrected):
 def load_model(model_path):
     try:
         model = MBartForConditionalGeneration.from_pretrained(model_path)
-        tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
+        tokenizer = AutoTokenizer.from_pretrained(model_path)
         
         model.eval()
         
@@ -154,6 +198,9 @@ st.title("✍️ Khmer Homophone Corrector")
 # Simple instruction
 st.markdown("Type or paste your Khmer text below to correct homophones.")
 
+# Load homophone examples
+homophone_examples = load_homophone_examples()
+
 # Create two columns for input and output
 col1, col2 = st.columns(2)
 
@@ -202,6 +249,59 @@ with col2:
                 st.error(f"An error occurred: {str(e)}")
     elif correct_button:
         st.warning("Please enter text first!")
+
+# Homophone Examples Section (before footer)
+st.markdown("---")
+st.markdown("## 📚 List of Homophones")
+st.markdown("**Common Khmer homophones that can be corrected:**")
+
+if homophone_examples:
+    # Create 3 columns for homophone groups
+    col1, col2, col3 = st.columns(3)
+    
+    # Distribute homophone groups across 3 columns
+    groups_per_column = len(homophone_examples) // 3
+    remainder = len(homophone_examples) % 3
+    
+    start_idx = 0
+    
+    with col1:
+        end_idx = start_idx + groups_per_column + (1 if remainder > 0 else 0)
+        for i in range(start_idx, end_idx):
+            if i < len(homophone_examples) and len(homophone_examples[i]) >= 2:
+                group_text = " | ".join(homophone_examples[i])
+                st.markdown(f"""
+                    <div class="homophone-group">
+                        <strong>Group {i+1}:</strong> {group_text}
+                    </div>
+                """, unsafe_allow_html=True)
+        start_idx = end_idx
+        remainder = max(0, remainder - 1)
+    
+    with col2:
+        end_idx = start_idx + groups_per_column + (1 if remainder > 0 else 0)
+        for i in range(start_idx, end_idx):
+            if i < len(homophone_examples) and len(homophone_examples[i]) >= 2:
+                group_text = " | ".join(homophone_examples[i])
+                st.markdown(f"""
+                    <div class="homophone-group">
+                        <strong>Group {i+1}:</strong> {group_text}
+                    </div>
+                """, unsafe_allow_html=True)
+        start_idx = end_idx
+        remainder = max(0, remainder - 1)
+    
+    with col3:
+        for i in range(start_idx, len(homophone_examples)):
+            if len(homophone_examples[i]) >= 2:
+                group_text = " | ".join(homophone_examples[i])
+                st.markdown(f"""
+                    <div class="homophone-group">
+                        <strong>Group {i+1}:</strong> {group_text}
+                    </div>
+                """, unsafe_allow_html=True)
+else:
+    st.warning("Homophone examples not available.")
 
 # Footer
 st.markdown("---")
