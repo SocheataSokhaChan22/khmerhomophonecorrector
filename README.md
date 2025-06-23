@@ -128,6 +128,7 @@ This project is licensed under the MIT License.
 **Socheata Sokhachan**
 - GitHub: [@SocheataSokhaChan22](https://github.com/SocheataSokhaChan22)
 - Project Website: [Khmer Homophone Corrector](https://sites.google.com/paragoniu.edu.kh/khmerhomophonecorrector/home)
+- Hugging Face: [socheatasokhachan/khmerhomophonecorrector](https://huggingface.co/socheatasokhachan/khmerhomophonecorrector)
 
 ## 🙏 Acknowledgments
 
